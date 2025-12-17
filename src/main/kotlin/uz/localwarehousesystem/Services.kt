@@ -1,10 +1,6 @@
 package uz.localwarehousesystem
 
 import jakarta.servlet.http.HttpServletResponse
-import okhttp3.FormBody
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -690,6 +686,17 @@ class ProductImageServiceImpl(
     private val productImageRepository: ProductImageRepository,
     private val securityUtils: SecurityUtils // current employee va role tekshirish uchun
 ) : ProductImageService {
+    private fun generateNumber(): Long {
+        val charPool =('1'..'9')
+        var number: String
+        do {
+            number = (1..10)
+                .map { charPool.random() }
+                .joinToString("")
+        } while (productRepository.existsByProductNumberAndDeletedFalse(number.toLong()))
+
+        return number.toLong()
+    }
 
     @Transactional
     override fun upload(productId: Long, file: MultipartFile, isPrimary: Boolean): ProductImageResponse {
@@ -705,6 +712,7 @@ class ProductImageServiceImpl(
         file.inputStream.use { Files.copy(it, path) }
 
         val fileAsset = FileAsset(
+            hashId = generateNumber(),
             fileName = file.originalFilename,
             contentType = file.contentType,
             size = file.size,
@@ -740,7 +748,7 @@ class ProductImageServiceImpl(
         val product = productRepository.findByIdAndDeletedFalse(productId) ?: throw ProductNotFoundException()
 
         return productImageRepository.findAllNotDeleted()
-            .filter { it.product?.id == product.id }
+            .filter { it.product.id == product.id }
             .map { ProductImageResponse.toResponse(it) }
     }
 }
@@ -802,9 +810,11 @@ class NotificationSettingServiceImpl(
         val currentEmployee = securityUtils.getCurrentEmployee()
         if (currentEmployee.role != EmployeeRole.ADMIN) throw EmployeeAccessDeniedException()
 
-        val setting = notificationSettingRepository.findAllNotDeleted().firstOrNull() ?: NotificationSetting()
+        val beforeDay = notificationSettingRepository.findAllNotDeleted().firstOrNull() ?: NotificationSetting(
+            beforeDay = settingRequest.beforeDay
+        )
 
-        notificationSettingRepository.save(setting)
+        notificationSettingRepository.save(beforeDay)
     }
 
 }

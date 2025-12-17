@@ -12,7 +12,6 @@ import jakarta.persistence.Id
 import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
 import jakarta.persistence.MappedSuperclass
-import jakarta.persistence.SequenceGenerator
 import jakarta.persistence.Table
 import jakarta.persistence.Temporal
 import jakarta.persistence.TemporalType
@@ -21,7 +20,6 @@ import org.springframework.data.annotation.CreatedBy
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.jpa.domain.support.AuditingEntityListener
 import java.math.BigDecimal
-import java.time.LocalDate
 import java.util.Date
 
 @MappedSuperclass
@@ -61,7 +59,7 @@ class Employee(
 class Category(
     @Column(nullable = false, unique = true) var name: String,
     @Column(nullable = false) @Enumerated(EnumType.STRING) var status: Status = Status.ACTIVE,
-    @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "category_id", nullable = false) var category: Category
+    @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "category_id", nullable = false) var category: Category?
 ):BaseEntity()
 
 @Entity
@@ -75,10 +73,10 @@ class Measure(
 @Entity
 @Table(name = "products")
 class Product(
-    @Column(nullable = false) var name : String,
-    @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "category_id", nullable = false) var category: Category,
+    @Column(nullable = false) var name: String,
+    @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "category_id", nullable = false) var category: Category?,
     @Column(unique = true, nullable = false) var productNumber: Long,
-    @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "measure_id") var measure: Measure,
+    @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "measure_id") var measure: Measure?,
 ):BaseEntity()
 
 
@@ -119,7 +117,7 @@ class TransactionItem(
 @Entity
 @Table(name = "notification_setting")
 class NotificationSetting(
-    @ColumnDefault("3") var beforeDay: LocalDate,
+    @ColumnDefault("3") var beforeDay: Long,
 //    var chatId: Long? = null,
 ):BaseEntity()
 
@@ -128,8 +126,8 @@ class NotificationSetting(
 @Table(name = "file_assets")
 class FileAsset(
     @Column(unique = true) var hashId: Long,
-    var fileName: String,
-    var contentType: String,
+    var fileName: String?,
+    var contentType: String?,
     var size: Long,
     var path: String
 ): BaseEntity()

@@ -96,7 +96,7 @@ data class CategoryResponse(
             id = entity.id!!,
             name = entity.name,
             status = entity.status,
-            parentCategoryId = entity.category.id
+            parentCategoryId = entity.category?.id
         )
     }
 }
@@ -126,8 +126,8 @@ data class ProductResponse(
             id = entity.id!!,
             name = entity.name,
             productNumber = entity.productNumber,
-            measureId = entity.measure.id,
-            categoryId = entity.category.id
+            measureId = entity.measure?.id,
+            categoryId = entity.category?.id
         )
     }
 }
@@ -250,8 +250,8 @@ data class ProductImageResponse(
     val id: Long,
     val productId: Long,
     val fileAssetId: Long,
-    val fileName: String,
-    val contentType: String,
+    val fileName: String?,
+    val contentType: String?,
     val size: Long,
     val isPrimary: Boolean
 ) {
