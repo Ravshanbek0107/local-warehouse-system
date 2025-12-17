@@ -35,6 +35,18 @@ class EmployeeServiceImpl(
     // tizimdagi current employee
     val currentEmployee = securityUtils.getCurrentEmployee()
 
+
+    private fun generateNumber(): Long {
+        val charPool =('1'..'9')
+        var number: String
+        do {
+            number = (1..6)
+                .map { charPool.random() }
+                .joinToString("")
+        } while (employeeRepository.existsByEmployeeNumberAndDeletedFalse(number.toLong()))
+
+        return number.toLong()
+    }
     @Transactional
     override fun create(request: EmployeeCreateRequest): EmployeeResponse {
 
@@ -45,6 +57,7 @@ class EmployeeServiceImpl(
             else -> throw EmployeeAccessDeniedException()
         }
 
+
         val warehouse = warehouseRepository.findByIdAndDeletedFalse(request.warehouseId) ?: throw WarehouseNotFoundException()
 
         val employee = Employee(
@@ -52,6 +65,7 @@ class EmployeeServiceImpl(
             surname = request.surname,
             phoneNumber = request.phoneNumber,
             password = securityUtils.passwordEncoder(request.password),
+            employeeNumber = generateNumber(),
             warehouse = warehouse,
             role = role,
             status = Status.ACTIVE
@@ -337,6 +351,18 @@ class ProductServiceImpl(
         }
     }
 
+    private fun generateNumber(): Long {
+        val charPool =('1'..'9')
+        var number: String
+        do {
+            number = (1..7)
+                .map { charPool.random() }
+                .joinToString("")
+        } while (productRepository.existsByProductNumberAndDeletedFalse(number.toLong()))
+
+        return number.toLong()
+    }
+
     @Transactional
     override fun create(request: ProductCreateRequest): ProductResponse {
         checkAdminPermission()
@@ -352,6 +378,7 @@ class ProductServiceImpl(
         val product = Product(
             name = request.name,
             measure = measure,
+            productNumber = generateNumber(),
             category = category
         )
         val saved = productRepository.save(product)
@@ -546,6 +573,18 @@ class TransactionServiceImpl(
     private val productRepository: ProductRepository,
     private val securityUtils: SecurityUtils
 ) : TransactionService {
+
+    private fun generateNumber(): Long {
+        val charPool =('1'..'9')
+        var number: String
+        do {
+            number = (1..9)
+                .map { charPool.random() }
+                .joinToString("")
+        } while (productRepository.existsByProductNumberAndDeletedFalse(number.toLong()))
+
+        return number.toLong()
+    }
 
     @Transactional
     override fun create(request: TransactionCreateRequest): TransactionResponse {

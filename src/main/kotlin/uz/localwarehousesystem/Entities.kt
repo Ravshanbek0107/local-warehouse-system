@@ -37,7 +37,7 @@ class BaseEntity(
 @Entity
 @Table(name = "warehouses")
 class Warehouse(
-    @Column(unique = true) var name: String? = null,
+    @Column(unique = true, nullable = false) var name: String,
     @Column(nullable = false) @Enumerated(EnumType.STRING) var status: Status = Status.ACTIVE,
 ):BaseEntity()
 
@@ -45,32 +45,29 @@ class Warehouse(
 @Entity
 @Table(name = "employees")
 class Employee(
-    var name: String? =null,
-    var surname: String? =null,
-    var phoneNumber: String? =null,
+    var name: String,
+    var surname: String,
+    var phoneNumber: String,
     @Column(nullable = false) @Enumerated(EnumType.STRING) var status: Status = Status.ACTIVE,
-    @Id
-    @SequenceGenerator(name = "employee_seq", sequenceName = "employee_seq", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "employee_seq")
-    @Column(unique = true) var employeeNumber: Long? = null,
-    var password: String? = null,
-    @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "warehouse_id") var warehouse: Warehouse? = null,
-    @Enumerated(EnumType.STRING) var role: EmployeeRole? = null
+    @Column(unique = true) var employeeNumber: Long,
+    var password: String,
+    @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "warehouse_id") var warehouse: Warehouse,
+    @Enumerated(EnumType.STRING) var role: EmployeeRole
 ):BaseEntity()
 
 
 @Entity
 @Table(name = "categories")
 class Category(
-    var name: String? = null,
+    @Column(nullable = false, unique = true) var name: String,
     @Column(nullable = false) @Enumerated(EnumType.STRING) var status: Status = Status.ACTIVE,
-    @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "category_id") var category: Category? = null,
+    @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "category_id", nullable = false) var category: Category
 ):BaseEntity()
 
 @Entity
 @Table(name = "measures")
 class Measure(
-    var name: String? = null,
+    @Column(nullable = false, unique = true) var name: String,
     @Column(nullable = false) @Enumerated(EnumType.STRING) var status: Status = Status.ACTIVE,
 ):BaseEntity()
 
@@ -78,47 +75,41 @@ class Measure(
 @Entity
 @Table(name = "products")
 class Product(
-    var name : String? =null,
-    @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "category_id") var category: Category? = null,
-    @Id
-    @SequenceGenerator(name = "product_seq", sequenceName = "product_seq", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "product_seq")
-    @Column(unique = true) var productNumber: Long? = null,
-    @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "measure_id") var measure: Measure? = null,
+    @Column(nullable = false) var name : String,
+    @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "category_id", nullable = false) var category: Category,
+    @Column(unique = true, nullable = false) var productNumber: Long,
+    @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "measure_id") var measure: Measure,
 ):BaseEntity()
 
 
 @Entity
 @Table(name = "suppliers")
 class Supplier(
-    var name: String? = null,
-    var phoneNumber: String? = null,
+    @Column(nullable = false)var name: String,
+    @Column(nullable = false)var phoneNumber: String,
 ):BaseEntity()
 
 
 @Entity
 @Table(name = "transactions")
 class Transaction(
-    @Temporal(TemporalType.DATE) var date: Date? = null,
-    @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "warehouse_id") var warehouse: Warehouse? = null,
+    @Temporal(TemporalType.DATE) var date: Date,
+    @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "warehouse_id", nullable = false) var warehouse: Warehouse,
     @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "supplier_id") var supplier: Supplier? = null,
 
-    @Column(columnDefinition = "NUMERIC(10,2)") var totalAmount: BigDecimal? = BigDecimal.ZERO,
-    @Id
-    @SequenceGenerator(name = "stock_in_out_seq", sequenceName = "stock_in_out_seq", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "stock_in_out_seq")
-    @Column(unique = true) var transactionNumber: Long? = null,
-    @Enumerated(EnumType.STRING) var transactionType: TransactionType? = null,
+    @Column(columnDefinition = "NUMERIC(10,2)") var totalAmount: BigDecimal = BigDecimal.ZERO,
+    @Column(unique = true, nullable = false) var transactionNumber: Long,
+    @Enumerated(EnumType.STRING) @Column(nullable = false) var transactionType: TransactionType,
     @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "parent_transaction_id") var parentTransaction: Transaction? = null,
-    @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "employee_id") var employee: Employee? = null,
+    @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "employee_id") var employee: Employee,
 ):BaseEntity()
 
 
 @Entity
 @Table(name = "transaction_items")
 class TransactionItem(
-    @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "transaction_id") var transaction: Transaction? = null,
-    @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "product_id") var product: Product? = null,
+    @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "transaction_id") var transaction: Transaction,
+    @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "product_id") var product: Product,
     @Column(columnDefinition = "NUMERIC(10,1)") var quantity: BigDecimal? = BigDecimal.ZERO,
     @Column(columnDefinition = "NUMERIC(10,2)") var priceIn: BigDecimal? = null,
     @Column(columnDefinition = "NUMERIC(10,2)") var priceOut: BigDecimal? = null,
@@ -128,7 +119,7 @@ class TransactionItem(
 @Entity
 @Table(name = "notification_setting")
 class NotificationSetting(
-    @ColumnDefault("3") var beforeDay: LocalDate? = null,
+    @ColumnDefault("3") var beforeDay: LocalDate,
 //    var chatId: Long? = null,
 ):BaseEntity()
 
@@ -136,22 +127,19 @@ class NotificationSetting(
 @Entity
 @Table(name = "file_assets")
 class FileAsset(
-
-    @Id @SequenceGenerator(name = "image_hash_id_seq", sequenceName = "image_hash_id_seq", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "image_hash_id_seq")
-    @Column(unique = true) var hashId: Long? = null,
-    var fileName: String? = null,
-    var contentType: String? = null,
-    var size: Long? = null,
-    var path: String? = null
+    @Column(unique = true) var hashId: Long,
+    var fileName: String,
+    var contentType: String,
+    var size: Long,
+    var path: String
 ): BaseEntity()
 
 @Entity
 @Table(name = "product_images")
 class ProductImage(
-    @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "product_id") var product: Product? = null,
+    @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "product_id") var product: Product,
 
-    @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "file_asset_id") var fileAsset: FileAsset? = null,
+    @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "file_asset_id") var fileAsset: FileAsset,
 
     @Column(nullable = false) var isPrimary: Boolean = false
 

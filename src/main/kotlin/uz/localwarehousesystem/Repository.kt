@@ -46,6 +46,7 @@ class BaseRepositoryImpl<T : BaseEntity>(
 @Repository
 interface EmployeeRepository : BaseRepository<Employee>{
     fun findByEmployeeNumberAndDeletedFalse(employeeNumber: Long): Employee?
+    fun existsByEmployeeNumberAndDeletedFalse(employeeNumber: Long): Boolean
 }
 
 @Repository
@@ -55,7 +56,9 @@ interface WarehouseRepository : BaseRepository<Warehouse>{}
 interface CategoryRepository : BaseRepository<Category>{}
 
 @Repository
-interface ProductRepository : BaseRepository<Product>{}
+interface ProductRepository : BaseRepository<Product>{
+    fun existsByProductNumberAndDeletedFalse(toLong: Long): Boolean
+}
 
 @Repository
 interface TransactionRepository : BaseRepository<Transaction>{}
