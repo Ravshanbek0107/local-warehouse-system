@@ -39,12 +39,12 @@ data class EmployeeResponse(
     companion object{
         fun toResponse(employee: Employee) = EmployeeResponse(
            id = employee.id!!,
-           name = employee.name!!,
-           surname = employee.surname!!,
-           phoneNumber = employee.phoneNumber!!,
-           warehouse = employee.warehouse!!,
-           role = employee.role!!,
-           employeeNumber = employee.employeeNumber!!,
+           name = employee.name,
+           surname = employee.surname,
+           phoneNumber = employee.phoneNumber,
+           warehouse = employee.warehouse,
+           role = employee.role,
+           employeeNumber = employee.employeeNumber,
            status = employee.status
         )
     }
@@ -68,7 +68,7 @@ data class WarehouseResponse(
     companion object {
         fun toResponse(entity: Warehouse) = WarehouseResponse(
             id = entity.id!!,
-            name = entity.name!!,
+            name = entity.name,
             status = entity.status
         )
     }
@@ -94,9 +94,9 @@ data class CategoryResponse(
     companion object {
         fun toResponse(entity: Category) = CategoryResponse(
             id = entity.id!!,
-            name = entity.name!!,
+            name = entity.name,
             status = entity.status,
-            parentCategoryId = entity.category?.id
+            parentCategoryId = entity.category.id
         )
     }
 }
@@ -124,10 +124,10 @@ data class ProductResponse(
     companion object {
         fun toResponse(entity: Product) = ProductResponse(
             id = entity.id!!,
-            name = entity.name!!,
+            name = entity.name,
             productNumber = entity.productNumber,
-            measureId = entity.measure?.id,
-            categoryId = entity.category?.id
+            measureId = entity.measure.id,
+            categoryId = entity.category.id
         )
     }
 }
@@ -149,7 +149,7 @@ data class MeasureResponse(
     companion object {
         fun toResponse(entity: Measure) = MeasureResponse(
             id = entity.id!!,
-            name = entity.name!!,
+            name = entity.name,
             status = entity.status
         )
     }
@@ -175,7 +175,7 @@ data class SupplierResponse(
     companion object {
         fun toResponse(entity: Supplier) = SupplierResponse(
             id = entity.id!!,
-            name = entity.name!!,
+            name = entity.name,
             phoneNumber = entity.phoneNumber
         )
     }
@@ -202,7 +202,7 @@ data class TransactionItemResponse(
     companion object {
         fun toResponse(item: TransactionItem) = TransactionItemResponse(
             id = item.id!!,
-            productId = item.product!!.id!!,
+            productId = item.product.id!!,
             quantity = item.quantity!!,
             priceIn = item.priceIn,
             priceOut = item.priceOut,
@@ -213,6 +213,7 @@ data class TransactionItemResponse(
 
 
 data class TransactionCreateRequest(
+    val date:Date,
     val warehouseId: Long,
     val supplierId: Long?,
     val transactionType: TransactionType,
@@ -221,6 +222,7 @@ data class TransactionCreateRequest(
 
 data class TransactionResponse(
     val id: Long,
+    val date: Date,
     val warehouseId: Long,
     val supplierId: Long?,
     val transactionNumber: Long,
@@ -232,12 +234,13 @@ data class TransactionResponse(
     companion object {
         fun toResponse(transaction: Transaction, items: List<TransactionItem>) = TransactionResponse(
             id = transaction.id!!,
-            warehouseId = transaction.warehouse!!.id!!,
+            date = transaction.date,
+            warehouseId = transaction.warehouse.id!!,
             supplierId = transaction.supplier?.id,
-            transactionNumber = transaction.transactionNumber!!,
-            transactionType = transaction.transactionType!!,
-            totalAmount = transaction.totalAmount ?: BigDecimal.ZERO,
-            employeeId = transaction.employee!!.id!!,
+            transactionNumber = transaction.transactionNumber,
+            transactionType = transaction.transactionType,
+            totalAmount = transaction.totalAmount,
+            employeeId = transaction.employee.id!!,
             items = items.map { TransactionItemResponse.toResponse(it) }
         )
     }
@@ -255,11 +258,11 @@ data class ProductImageResponse(
     companion object {
         fun toResponse(image: ProductImage) = ProductImageResponse(
             id = image.id!!,
-            productId = image.product?.id!!,
-            fileAssetId = image.fileAsset?.hashId!!,
-            fileName = image.fileAsset?.fileName ?: "",
-            contentType = image.fileAsset?.contentType ?: "",
-            size = image.fileAsset?.size ?: 0,
+            productId = image.product.id!!,
+            fileAssetId = image.fileAsset.hashId,
+            fileName = image.fileAsset.fileName,
+            contentType = image.fileAsset.contentType,
+            size = image.fileAsset.size,
             isPrimary = image.isPrimary
         )
     }

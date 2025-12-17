@@ -607,7 +607,10 @@ class TransactionServiceImpl(
             warehouse = warehouse,
             supplier = supplier,
             transactionType = request.transactionType,
-            employee = currentEmployee
+            employee = currentEmployee,
+            transactionNumber = generateNumber(),
+            date = request.date,
+
         )
 
         val savedTransaction = transactionRepository.save(transaction)
