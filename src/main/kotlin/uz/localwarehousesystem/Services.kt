@@ -52,9 +52,10 @@ class EmployeeServiceImpl(
             EmployeeRole.ADMIN -> EmployeeRole.EMPLOYEE
             else -> throw EmployeeAccessDeniedException()
         }
-
-
-        val warehouse = warehouseRepository.findByIdAndDeletedFalse(request.warehouseId) ?: throw WarehouseNotFoundException()
+        var warehouse: Warehouse? = null
+        if (request.warehouseId != null) {
+            warehouse = warehouseRepository.findByIdAndDeletedFalse(request.warehouseId) ?: throw WarehouseNotFoundException()
+        }
 
         val employee = Employee(
             name = request.name,
@@ -62,8 +63,8 @@ class EmployeeServiceImpl(
             phoneNumber = request.phoneNumber,
             password = securityUtils.passwordEncoder(request.password),
             employeeNumber = generateNumber(),
-            warehouse = warehouse,
             role = role,
+            warehouse = warehouse,
             status = Status.ACTIVE
         )
 

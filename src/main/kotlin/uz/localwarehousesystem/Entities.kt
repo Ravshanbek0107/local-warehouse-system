@@ -49,7 +49,7 @@ class Employee(
     @Column(nullable = false) @Enumerated(EnumType.STRING) var status: Status = Status.ACTIVE,
     @Column(unique = true) var employeeNumber: Long,
     var password: String,
-    @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "warehouse_id") var warehouse: Warehouse,
+    @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "warehouse_id") var warehouse: Warehouse?,
     @Enumerated(EnumType.STRING) var role: EmployeeRole
 ):BaseEntity()
 

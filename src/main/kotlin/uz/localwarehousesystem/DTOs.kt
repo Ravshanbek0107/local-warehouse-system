@@ -14,7 +14,7 @@ data class EmployeeCreateRequest(
     val surname: String,
     val phoneNumber: String,
     val password: String,
-    val warehouseId: Long,
+    val warehouseId: Long?,
 )
 
 data class EmployeeUpdateRequest(
@@ -31,7 +31,7 @@ data class EmployeeResponse(
     val name: String,
     val surname: String,
     val phoneNumber: String,
-    val warehouse: Warehouse,
+    val warehouse: Warehouse?,
     val role: EmployeeRole,
     val employeeNumber: Long,
     val status: Status

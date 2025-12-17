@@ -14,7 +14,6 @@ import org.springframework.web.servlet.AsyncHandlerInterceptor
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 import org.springframework.web.servlet.support.RequestContextUtils
-import uz.localwarehousesystem.security.SecurityConfig
 import uz.localwarehousesystem.security.SecurityUtils
 import java.util.Locale
 
@@ -56,7 +55,9 @@ class DataLoader(
                 phoneNumber = "998991112233",
                 password = securityUtils.passwordEncoder("123"),
                 role = EmployeeRole.MANAGER,
-                status = Status.ACTIVE
+                status = Status.ACTIVE,
+                employeeNumber = 125645L,
+                warehouse = null
             )
             employeeRepository.save(manager)
             println("Manager created: ${manager.name}")
