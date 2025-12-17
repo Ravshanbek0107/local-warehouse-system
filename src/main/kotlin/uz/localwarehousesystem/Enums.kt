@@ -1,0 +1,46 @@
+package uz.localwarehousesystem
+
+
+enum class ErrorCode(val code: Int) {
+    CURRENT_USER_NOT_FOUND(100),
+    EMPLOYEE_ACCSESS_DENIED(101),
+    WAREHOUSE_NOT_FOUND(102),
+    EMPLOYEE_NOT_FOUND(103),
+    SUPPLIER_NOT_FOUND(104),
+    TRANSACTION_ACCSESS_DENIED(105),
+    WRONG_PASSWORD(106),
+    EMPLOYEE_NON_ACTIVE(107),
+
+    CATEGORY_NOT_FOUND(200),
+    CATEGORY_HAS_SUBCATEGORIES(201),
+    CATEGORY_HAS_PRODUCTS(202),
+    CATEGORY_NON_ACTIVE(203),
+    PRODUCT_NOT_FOUND(204),
+    MEASURE_NOT_FOUND(205),
+    MEASURE_NON_ACTIVE(206),
+    TRANSACTION_NOT_FOUND(207),
+    FILE_NOT_FOUND(208),
+    IMAGE_NOT_FOUND(209),
+
+
+}
+
+enum class Status{
+
+    ACTIVE,
+    INACTIVE
+}
+
+enum class EmployeeRole{
+
+    ADMIN,
+    EMPLOYEE,
+    MANAGER
+
+}
+
+enum class TransactionType{
+    STOCK_IN,
+    STOCK_OUT,
+    SALE_RETURN,
+}
